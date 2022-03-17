@@ -7,6 +7,9 @@ const email = document.querySelector("#email");
 const asunto = document.querySelector("#asunto");
 const mensaje = document.querySelector("#mensaje");
 
+const er =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 eventListeners();
 function eventListeners() {
   document.addEventListener("DOMContentLoaded", iniciarApp);
@@ -26,37 +29,42 @@ function iniciarApp() {
 function validarFormulario(event) {
   if (event.target.value.length > 0) {
     // Elimina los errores
-    const error = document.querySelector("p.error")
-    error.remove();
+    const error = document.querySelector("p.error");
+    if (error) {
+      error.remove();
+    }
 
     event.target.classList.remove("border", "border-red-500");
     event.target.classList.add("border", "border-green-500");
-    
   } else {
     event.target.classList.remove("border", "border-green-500");
     event.target.classList.add("border", "border-red-500");
-    
+
     mostrarError("Todos los campos son obligatorios.");
   }
-  
-  if(event.target.type === "email") {
-    const er = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if(er.test(event.target.value)) {
-      const error = document.querySelector("p.error")
-      error.remove();
-  
+  if (event.target.type === "email") {
+    if (er.test(event.target.value)) {
+      const error = document.querySelector("p.error");
+      if (error) {
+        error.remove();
+      }
+
       event.target.classList.remove("border", "border-red-500");
       event.target.classList.add("border", "border-green-500");
-    }else {
+    } else {
       event.target.classList.remove("border", "border-green-500");
       event.target.classList.add("border", "border-red-500");
 
-      mostrarError("Email no valido")
+      mostrarError("Email no valido");
     }
   }
-}
 
+  if (er.test(email.value) && asunto.value !== "" && mensaje.value !== "") {
+    btnEnviar.disabled = false;
+    btnEnviar.classList.remove("cursor-not-allowed", "opacity-50");
+}
+}
 function mostrarError(mensaje) {
   const mensajeError = document.createElement("p");
   mensajeError.textContent = mensaje;
